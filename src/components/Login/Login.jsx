@@ -5,19 +5,36 @@ import {
   FormLabel,
   FormHelperText,
   Button,
+  Link,
 } from "@chakra-ui/core";
+
+import {
+  useHistory,
+} from 'react-router-dom';
 
 import './Login.scss';
 
+import firebase from '../../services/firebase';
+
 function Login() {
+  const history = useHistory();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
 
-  const handleSubmit = () => {
-    console.log('formData', formData);
+  const handleSubmit = async () => {
+    try {
+      setIsLoading(true);
+      const { email, password } = formData;
+      const response = await firebase.auth().signInWithEmailAndPassword(email, password);
+      console.log(response);
+    } catch(err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   const handleInputChange = (e) => {
@@ -64,6 +81,7 @@ function Login() {
       >
         Submit
       </Button>
+      <Link onClick={() => history.push('/signup')}>Signup</Link>
     </div>
   )
 }

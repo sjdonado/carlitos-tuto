@@ -2,8 +2,15 @@ import React from 'react';
 import './App.scss';
 
 import { ThemeProvider, theme, CSSReset } from "@chakra-ui/core";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from "react-router-dom";
 
 import Login from './components/Login/Login';
+import Signup from './components/Signup/Signup';
+
 
 const customTheme = {
   ...theme,
@@ -23,7 +30,12 @@ function App() {
       theme={customTheme}
     >
       <CSSReset />
-      <Login />
+      <Router>
+        <Switch>
+          <Route path="/login" component={Login} />
+          <Route path="/signup" component={Signup} />
+        </Switch>
+      </Router>
     </ThemeProvider>
   );
 }
