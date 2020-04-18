@@ -5,8 +5,7 @@ import {
   FormLabel,
   FormHelperText,
   Button,
-  Link,
-} from "@chakra-ui/core";
+} from '@chakra-ui/core';
 
 import {
   useHistory,
@@ -30,21 +29,21 @@ function Login() {
       const { email, password } = formData;
       const response = await firebase.auth().signInWithEmailAndPassword(email, password);
       console.log(response);
-    } catch(err) {
+    } catch (err) {
       console.log(err);
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
-    })
-  }
+    });
+  };
 
-  return(
+  return (
     <div className="container">
       <h1>Login</h1>
       <FormControl className="form-control">
@@ -58,7 +57,7 @@ function Login() {
           onChange={handleInputChange}
         />
         <FormHelperText id="email-helper-text">
-          We'll never share your email.
+          We&apos;ll never share your email.
         </FormHelperText>
       </FormControl>
       <FormControl className="form-control">
@@ -81,9 +80,9 @@ function Login() {
       >
         Submit
       </Button>
-      <Link onClick={() => history.push('/signup')}>Signup</Link>
+      <Button onClick={() => history.push('/signup')}>Signup</Button>
     </div>
-  )
+  );
 }
 
 export default Login;

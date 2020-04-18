@@ -2,11 +2,11 @@ import React from 'react';
 
 function Test(props) {
   const [name, setName] = React.useState('Sin nombre');
-  const { testFunc, children } = props;
-  const arr = [1, 2, 3];
+  // const { testFunc, children } = props;
+  // const arr = [1, 2, 3];
 
-  console.log("PROPS =>", props)
-  
+  console.log('PROPS =>', props);
+
   return (
     <div className="test">
       <h1>{name}</h1>
@@ -16,11 +16,11 @@ function Test(props) {
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
-      <span onClick={() => setName('Carlos')}>
+      {/* <span onClick={() => setName('Carlos')}>
         Button
-      </span>
+      </span> */}
     </div>
-  )
+  );
 }
 
 export default Test;

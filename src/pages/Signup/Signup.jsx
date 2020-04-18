@@ -10,7 +10,7 @@ function Signup() {
       <h1>Signup</h1>
       <Link to="/login">Return to Login</Link>
     </>
-  )
+  );
 }
 
 export default Signup;

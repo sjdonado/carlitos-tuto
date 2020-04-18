@@ -1,3 +1,11 @@
 {
-  "editor.tabSize": 2
+  "eslint.run": "onSave",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "editor.tabSize": 2,
+  "search.exclude": {
+    "**/build": true,
+    "package-lock.json": true
+  }
 }
