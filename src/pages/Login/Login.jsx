@@ -24,16 +24,17 @@ function Login() {
   });
 
   const handleSubmit = async () => {
-    try {
-      setIsLoading(true);
-      const { email, password } = formData;
-      const response = await firebase.auth().signInWithEmailAndPassword(email, password);
-      console.log(response);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setIsLoading(false);
-    }
+    // try {
+    //   setIsLoading(true);
+    //   const { email, password } = formData;
+    //   const response = await firebase.auth().signInWithEmailAndPassword(email, password);
+    //   console.log(response);
+    // } catch (err) {
+    //   console.log(err);
+    // } finally {
+    //   setIsLoading(false);
+    // }
+    console.log(formData)
   };
 
   const handleInputChange = (e) => {
