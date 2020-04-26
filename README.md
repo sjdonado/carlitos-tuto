@@ -1,2 +1,2 @@
 # Carlitos tuto
-React from scratch meet talks
+React from scratch using firebase as backend
