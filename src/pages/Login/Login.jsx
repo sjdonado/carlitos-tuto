@@ -7,21 +7,17 @@ import {
   FormLabel,
   FormHelperText,
   Button,
+  useToast,
 } from '@chakra-ui/core';
 
-import {
-  useHistory,
-} from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import styles from './Login.module.scss';
 import { auth } from '../../services/firebase';
 
-function Login({ isAuth, setUserToken }) {
+function Login({ setUserToken }) {
+  const toast = useToast();
   const history = useHistory();
-
-  if (isAuth) {
-    history.push('/dashboard');
-  }
 
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -33,11 +29,14 @@ function Login({ isAuth, setUserToken }) {
     try {
       setIsLoading(true);
       const { email, password } = formData;
-      const user = await auth.signInWithEmailAndPassword(email, password);
-      console.log(user);
-      setUserToken('');
-    } catch (err) {
-      console.log(err);
+      const { user } = await auth.signInWithEmailAndPassword(email, password);
+      setUserToken(user.uid);
+    } catch ({ message }) {
+      toast({
+        title: message,
+        status: 'error',
+        isClosable: true,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -93,7 +92,6 @@ function Login({ isAuth, setUserToken }) {
 }
 
 Login.propTypes = {
-  isAuth: Proptypes.bool.isRequired,
   setUserToken: Proptypes.func.isRequired,
 };
 

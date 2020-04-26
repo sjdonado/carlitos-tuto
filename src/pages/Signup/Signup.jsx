@@ -6,6 +6,7 @@ import {
   FormControl,
   FormLabel,
   Button,
+  useToast,
 } from '@chakra-ui/core';
 
 import { useHistory } from 'react-router-dom';
@@ -14,12 +15,9 @@ import styles from './Signup.module.scss';
 import { auth } from '../../services/firebase';
 import { addUser } from '../../db/user';
 
-function Signup({ isAuth, setUserToken }) {
+function Signup({ setUserToken }) {
   const history = useHistory();
-
-  if (isAuth) {
-    history.push('/dashboard');
-  }
+  const toast = useToast();
 
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -33,11 +31,15 @@ function Signup({ isAuth, setUserToken }) {
     try {
       setIsLoading(true);
       const { email, password } = formData;
-      const { uid } = await auth.createUserWithEmailAndPassword(email, password);
-      await addUser(uid, formData);
-      setUserToken(uid);
-    } catch (err) {
-      console.log(err);
+      const { user } = await auth.createUserWithEmailAndPassword(email, password);
+      await addUser(user.uid, formData);
+      setUserToken(user.uid);
+    } catch ({ message }) {
+      toast({
+        title: message,
+        status: 'error',
+        isClosable: true,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -113,7 +115,6 @@ function Signup({ isAuth, setUserToken }) {
 }
 
 Signup.propTypes = {
-  isAuth: Proptypes.bool.isRequired,
   setUserToken: Proptypes.func.isRequired,
 };
 
