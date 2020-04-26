@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 
 import './App.scss';
@@ -10,11 +10,12 @@ import {
   Redirect,
 } from 'react-router-dom';
 
+import PublicRoute from './components/PublicRoute';
+import PrivateRoute from './components/PrivateRoute';
+
 import Login from './pages/Login/Login';
 import Signup from './pages/Signup/Signup';
 import Dashboard from './pages/Dashboard/Dashboard';
-import PublicRoute from './components/PublicRoute';
-import PrivateRoute from './components/PrivateRoute';
 
 function Routes() {
   const [cookies, setCookie, removeCookie] = useCookies(['user-token']);

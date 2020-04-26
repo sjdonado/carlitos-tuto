@@ -13,7 +13,7 @@ import {
 import { useHistory } from 'react-router-dom';
 
 import styles from './Login.module.scss';
-import { auth } from '../../services/firebase';
+import { login } from '../../db/user';
 
 function Login({ setUserToken }) {
   const toast = useToast();
@@ -29,7 +29,7 @@ function Login({ setUserToken }) {
     try {
       setIsLoading(true);
       const { email, password } = formData;
-      const { user } = await auth.signInWithEmailAndPassword(email, password);
+      const { user } = await login(email, password);
       setUserToken(user.uid);
     } catch ({ message }) {
       toast({
@@ -56,7 +56,6 @@ function Login({ setUserToken }) {
         <FormLabel htmlFor="email">Email address</FormLabel>
         <Input
           type="email"
-          id="email"
           name="email"
           value={formData.email}
           aria-describedby="email-helper-text"
@@ -70,7 +69,6 @@ function Login({ setUserToken }) {
         <FormLabel htmlFor="password">Password</FormLabel>
         <Input
           type="password"
-          id="password"
           name="password"
           value={formData.password}
           onChange={handleInputChange}

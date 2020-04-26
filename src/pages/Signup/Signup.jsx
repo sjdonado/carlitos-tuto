@@ -12,8 +12,7 @@ import {
 import { useHistory } from 'react-router-dom';
 import styles from './Signup.module.scss';
 
-import { auth } from '../../services/firebase';
-import { addUser } from '../../db/user';
+import { login, addUser } from '../../db/user';
 
 function Signup({ setUserToken }) {
   const history = useHistory();
@@ -31,7 +30,7 @@ function Signup({ setUserToken }) {
     try {
       setIsLoading(true);
       const { email, password } = formData;
-      const { user } = await auth.createUserWithEmailAndPassword(email, password);
+      const { user } = await login(email, password);
       await addUser(user.uid, formData);
       setUserToken(user.uid);
     } catch ({ message }) {
@@ -59,7 +58,6 @@ function Signup({ setUserToken }) {
         <FormLabel htmlFor="name">Name</FormLabel>
         <Input
           type="name"
-          id="name"
           name="name"
           value={formData.name}
           aria-describedby="name-helper-text"
@@ -70,7 +68,6 @@ function Signup({ setUserToken }) {
         <FormLabel htmlFor="name">Last Name</FormLabel>
         <Input
           type="name"
-          id="lastName"
           name="lastName"
           value={formData.lastName}
           aria-describedby="lastName-helper-text"
@@ -81,7 +78,6 @@ function Signup({ setUserToken }) {
         <FormLabel htmlFor="name">Email</FormLabel>
         <Input
           type="email"
-          id="email"
           name="email"
           value={formData.email}
           aria-describedby="email-helper-text"
@@ -92,7 +88,6 @@ function Signup({ setUserToken }) {
         <FormLabel htmlFor="name">Password</FormLabel>
         <Input
           type="password"
-          id="password"
           name="password"
           value={formData.password}
           aria-describedby="password-helper-text"
