@@ -1,55 +1,41 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+import Proptypes from 'prop-types';
+
 import {
   Input,
   FormControl,
   FormLabel,
-  FormHelperText,
   Button,
 } from '@chakra-ui/core';
 
-import {
-  useHistory,
-} from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import styles from './Signup.module.scss';
 
-import './Signup.scss'
+import { auth } from '../../services/firebase';
+import { addUser } from '../../db/user';
 
-
-import {db, auth} from '../../services/firebase'
-
-
-function Signup() {
+function Signup({ isAuth, setUserToken }) {
   const history = useHistory();
+
+  if (isAuth) {
+    history.push('/dashboard');
+  }
+
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    name:'',
-    lastName:'',
-    email:'',
-    password:'',
+    name: '',
+    lastName: '',
+    email: '',
+    password: '',
   });
 
-  const addUser = () => {
-    db.collection("Users").add({
-      name: formData.name,
-      lastName: formData.lastName,
-      email: formData.email,
-      password: formData.password
-    })
-    .then(function(docRef) {
-        console.log("Document written with ID: ", docRef.id);
-    })
-    .catch(function(error) {
-        console.error("Error adding document: ", error);
-    });
-  }
-  
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
-      const { name, lastName, email, password } = formData;
-      const response = await auth.createUserWithEmailAndPassword(email, password).catch(function(error) {
-        console.log(error)
-      });
-      console.log(response);
+      const { email, password } = formData;
+      const { uid } = await auth.createUserWithEmailAndPassword(email, password);
+      await addUser(uid, formData);
+      setUserToken(uid);
     } catch (err) {
       console.log(err);
     } finally {
@@ -64,11 +50,10 @@ function Signup() {
     });
   };
 
-  
   return (
-    <div className="container">
+    <div className={styles.container}>
       <h1>Sign Up</h1>
-      <FormControl className="form-control">
+      <FormControl className={styles['form-control']}>
         <FormLabel htmlFor="name">Name</FormLabel>
         <Input
           type="name"
@@ -79,7 +64,7 @@ function Signup() {
           onChange={handleInputChange}
         />
       </FormControl>
-      <FormControl className="form-control">
+      <FormControl className={styles['form-control']}>
         <FormLabel htmlFor="name">Last Name</FormLabel>
         <Input
           type="name"
@@ -90,7 +75,7 @@ function Signup() {
           onChange={handleInputChange}
         />
       </FormControl>
-      <FormControl className="form-control">
+      <FormControl className={styles['form-control']}>
         <FormLabel htmlFor="name">Email</FormLabel>
         <Input
           type="email"
@@ -101,7 +86,7 @@ function Signup() {
           onChange={handleInputChange}
         />
       </FormControl>
-      <FormControl className="form-control">
+      <FormControl className={styles['form-control']}>
         <FormLabel htmlFor="name">Password</FormLabel>
         <Input
           type="password"
@@ -113,17 +98,23 @@ function Signup() {
         />
       </FormControl>
       <Button
-        className="submit-btn"
+        className={styles['submit-btn']}
         isLoading={isLoading}
         loadingText="Submitting"
         variantColor="teal"
         variant="outline"
-        onClick={handleSubmit, addUser}
+        onClick={handleSubmit}
       >
         Submit
       </Button>
+      <Button onClick={() => history.push('/login')}>Go to Login</Button>
     </div>
   );
 }
+
+Signup.propTypes = {
+  isAuth: Proptypes.bool.isRequired,
+  setUserToken: Proptypes.func.isRequired,
+};
 
 export default Signup;

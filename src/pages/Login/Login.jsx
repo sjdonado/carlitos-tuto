@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import Proptypes from 'prop-types';
+
 import {
   Input,
   FormControl,
@@ -11,12 +13,16 @@ import {
   useHistory,
 } from 'react-router-dom';
 
-import './Login.scss';
+import styles from './Login.module.scss';
+import { auth } from '../../services/firebase';
 
-import firebase from '../../services/firebase';
-
-function Login() {
+function Login({ isAuth, setUserToken }) {
   const history = useHistory();
+
+  if (isAuth) {
+    history.push('/dashboard');
+  }
+
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -24,17 +30,17 @@ function Login() {
   });
 
   const handleSubmit = async () => {
-    // try {
-    //   setIsLoading(true);
-    //   const { email, password } = formData;
-    //   const response = await firebase.auth().signInWithEmailAndPassword(email, password);
-    //   console.log(response);
-    // } catch (err) {
-    //   console.log(err);
-    // } finally {
-    //   setIsLoading(false);
-    // }
-    console.log(formData)
+    try {
+      setIsLoading(true);
+      const { email, password } = formData;
+      const user = await auth.signInWithEmailAndPassword(email, password);
+      console.log(user);
+      setUserToken('');
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleInputChange = (e) => {
@@ -45,9 +51,9 @@ function Login() {
   };
 
   return (
-    <div className="container">
+    <div className={styles.container}>
       <h1>Login</h1>
-      <FormControl className="form-control">
+      <FormControl className={styles['form-control']}>
         <FormLabel htmlFor="email">Email address</FormLabel>
         <Input
           type="email"
@@ -61,7 +67,7 @@ function Login() {
           We&apos;ll never share your email.
         </FormHelperText>
       </FormControl>
-      <FormControl className="form-control">
+      <FormControl className={styles['form-control']}>
         <FormLabel htmlFor="password">Password</FormLabel>
         <Input
           type="password"
@@ -72,7 +78,7 @@ function Login() {
         />
       </FormControl>
       <Button
-        className="submit-btn"
+        className={styles['submit-btn']}
         isLoading={isLoading}
         loadingText="Submitting"
         variantColor="teal"
@@ -81,9 +87,14 @@ function Login() {
       >
         Submit
       </Button>
-      <Button onClick={() => history.push('/signup')}>Signup</Button>
+      <Button onClick={() => history.push('/signup')}>Go to Signup</Button>
     </div>
   );
 }
+
+Login.propTypes = {
+  isAuth: Proptypes.bool.isRequired,
+  setUserToken: Proptypes.func.isRequired,
+};
 
 export default Login;
